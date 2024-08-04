@@ -14,6 +14,7 @@ class _HomePageState extends State<HomePage> {
       backgroundColor: Color.fromARGB(255, 96, 98, 111),
       body: SafeArea(
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
               padding:
@@ -37,8 +38,21 @@ class _HomePageState extends State<HomePage> {
             const SizedBox(
               height: 20,
             ),
-            Text("Wellcome Home"),
-            Text("Some info")
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 40.0),
+              child: Column(
+                children: [
+                  Text("Wellcome Home"),
+                  Text(
+                    "Some info",
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 30,
+                        fontWeight: FontWeight.bold),
+                  )
+                ],
+              ),
+            )
           ],
         ),
       ),
