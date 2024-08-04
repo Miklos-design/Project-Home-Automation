@@ -4,15 +4,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class SmartDeviceBox extends StatelessWidget {
-  final String smartDeviceName;
+class DeviceBlock extends StatelessWidget {
+  final String name;
   final String iconPath;
   final bool powerOn;
   void Function(bool)? onChanged;
 
-  SmartDeviceBox({
+  DeviceBlock({
     super.key,
-    required this.smartDeviceName,
+    required this.name,
     required this.iconPath,
     required this.powerOn,
     required this.onChanged,
@@ -46,7 +46,7 @@ class SmartDeviceBox extends StatelessWidget {
                     child: Padding(
                       padding: const EdgeInsets.only(left: 25.0),
                       child: Text(
-                        smartDeviceName,
+                        name,
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 20,

@@ -1,5 +1,8 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:homesense/utils/device_block.dart';
 import '../utils/colors.dart';
 
 class HomePage extends StatefulWidget {
@@ -18,6 +21,7 @@ class _HomePageState extends State<HomePage> {
     ["Garage", "assets/garage.png", true],
     ["Blinds", "assets/garden.png", true],
   ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -45,22 +49,21 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
             ),
-            const SizedBox(
-              height: 20,
-            ),
+            const SizedBox(height: 20),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 40.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text("Wellcome Home"),
+                  Text("Welcome Home"),
                   Text(
                     "Some info",
                     style: TextStyle(
-                        color: Color.fromARGB(255, 255, 255, 255),
-                        fontSize: 30,
-                        fontWeight: FontWeight.bold),
-                  )
+                      color: Color.fromARGB(255, 255, 255, 255),
+                      fontSize: 30,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -70,18 +73,24 @@ class _HomePageState extends State<HomePage> {
               child: Text("Smart Devices"),
             ),
             Expanded(
-                child: GridView.builder(
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2),
-                    itemBuilder: (context, index) {
-                      return Container(
-                        margin: const EdgeInsets.all(20),
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(20)),
-                      );
-                    }))
+              child: GridView.builder(
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                ),
+                itemCount: _MySmartDevices
+                    .length, // Ensure itemCount matches the list length
+                itemBuilder: (context, index) {
+                  return DeviceBlock(
+                    name: _MySmartDevices[index][0],
+                    iconPath: _MySmartDevices[index][1],
+                    powerOn: _MySmartDevices[index][2],
+                    onChanged: (value) {
+                      // Do something with the value
+                    },
+                  );
+                },
+              ),
+            ),
           ],
         ),
       ),
