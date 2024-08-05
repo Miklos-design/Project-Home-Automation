@@ -1,7 +1,5 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:homesense/utils/device_block.dart';
 import '../utils/colors.dart';
 
@@ -56,8 +54,6 @@ class _HomePageState extends State<HomePage> {
 
     setState(() {
       _MySmartDevices.addAll([
-        // ["New Room 1", "assets/new_room.png", true],
-        // ["New Room 2", "assets/new_room.png", true],
         // Add more items as needed
       ]);
       _isLoadingMore = false;
@@ -67,82 +63,108 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 90, 212, 249),
+      backgroundColor: backgroundColor,
       body: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 40.0, vertical: 20.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Icon(
-                    Icons.menu,
-                    size: 50,
-                    color: iconColor,
-                  ),
-                  Icon(
-                    Icons.person,
-                    size: 50,
-                    color: iconColor,
-                  )
-                ],
-              ),
-            ),
-            const SizedBox(height: 20),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 40.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text("Welcome Home"),
-                  Text(
-                    "Mossgiel House",
-                    style: TextStyle(
-                      color: Color.fromARGB(255, 255, 255, 255),
-                      fontSize: 30,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 20),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 40.0),
-              child: Text("Smart Devices"),
-            ),
-            Expanded(
-              child: GridView.builder(
-                controller: _scrollController,
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                ),
-                itemCount: _MySmartDevices.length,
-                itemBuilder: (context, index) {
-                  return DeviceBlock(
-                    name: _MySmartDevices[index][0],
-                    iconPath: _MySmartDevices[index][1],
-                    powerOn: _MySmartDevices[index][2],
-                    onChanged: (value) => powerToggleSwitched(value, index),
-                  );
-                },
-              ),
-            ),
-            if (_isLoadingMore)
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
               Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Center(child: CircularProgressIndicator()),
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 40.0, vertical: 10.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Icon(
+                      Icons.menu,
+                      size: 50,
+                      color: iconColor,
+                    ),
+                    Expanded(
+                      child: Center(
+                        child: Text(
+                          "HomeSense",
+                          style: GoogleFonts.oswald(
+                            fontSize: 29,
+                            fontWeight: FontWeight.w400, // Thin weight
+                            color: mainTextColor,
+                          ),
+                        ),
+                      ),
+                    ),
+                    Icon(
+                      Icons.person,
+                      size: 50,
+                      color: iconColor,
+                    )
+                  ],
+                ),
               ),
-          ],
+              const SizedBox(height: 10),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 40.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Mossgiel House",
+                      style: GoogleFonts.bebasNeue(
+                        fontSize: 50,
+                        color: customTextColor,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 10),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 40.0),
+                child: Text("Smart Devices"),
+              ),
+              SizedBox(
+                height: MediaQuery.of(context).size.height *
+                    0.6, // Set a fixed height for the grid
+                child: GridView.builder(
+                  //controller: _scrollController,
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    //childAspectRatio: 1.2,
+                  ),
+                  itemCount: _MySmartDevices.length,
+                  itemBuilder: (context, index) {
+                    return DeviceBlock(
+                      name: _MySmartDevices[index][0],
+                      iconPath: _MySmartDevices[index][1],
+                      powerOn: _MySmartDevices[index][2],
+                      onChanged: (value) => powerToggleSwitched(value, index),
+                    );
+                  },
+                ),
+              ),
+              if (_isLoadingMore)
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Center(child: CircularProgressIndicator()),
+                ),
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 40.0, vertical: 20.0),
+                child: ElevatedButton(
+                  onPressed: () {
+                    // Add your button action here
+                  },
+                  child: Text("Add Device"),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
 
-  powerToggleSwitched(bool value, int index) {
+  void powerToggleSwitched(bool value, int index) {
     setState(() {
       _MySmartDevices[index][2] = value;
     });

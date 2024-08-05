@@ -25,7 +25,9 @@ class DeviceBlock extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(24),
-          color: powerOn ? Colors.grey[900] : Color.fromARGB(44, 164, 167, 189),
+          color: powerOn
+              ? Color.fromARGB(255, 29, 18, 107)
+              : Color.fromARGB(222, 164, 167, 189),
         ),
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 25.0),
@@ -50,7 +52,9 @@ class DeviceBlock extends StatelessWidget {
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 20,
-                          color: powerOn ? Colors.white : Colors.black,
+                          color: powerOn
+                              ? Color.fromARGB(232, 255, 255, 255)
+                              : Color.fromARGB(133, 0, 0, 0),
                         ),
                       ),
                     ),
