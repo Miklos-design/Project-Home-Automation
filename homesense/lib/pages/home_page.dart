@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:homesense/services/hass.dart';
 import 'package:homesense/utils/device_block.dart';
 import '../utils/colors.dart';
 
@@ -11,14 +12,27 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final Hass _api = Hass(
+    baseUrl: 'http://192.168.0.68:8123',
+    token:
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiI3ZDVjMmQ5MjJlZjg0YzhiYmE5NmM2Mzk5NTNkNjk2NyIsImlhdCI6MTcyMjg1OTY4MCwiZXhwIjoyMDM4MjE5NjgwfQ.JMW0uIi2Zwzn0CWRheznp91MQDKHcFTDr9-f68f3qQE',
+  );
+
   List _MySmartDevices = [
-    ["Living Room", "lib/assets/floor_lamp.png", true],
-    ["Bed Room", "lib/assets/home.png", true],
-    ["Shed", "lib/assets/home.png", true],
-    ["Lounge", "lib/assets/home.png", true],
-    ["Garage", "lib/assets/home.png", true],
-    ["Blinds", "lib/assets/home.png", true],
+    ["Living Room", "lib/assets/floor_lamp.png", true, "light.living_room"],
+    ["Bed Room", "lib/assets/home.png", true, "light.bed_room"],
+    ["Shed", "lib/assets/home.png", true, "light.shed"],
+    [
+      "Lounge",
+      "lib/assets/floor_lamp.png",
+      true,
+      "switch.lounge_lamp_switch_1"
+    ],
+    ["Garage", "lib/assets/home.png", true, "light.garage"],
+    ["Blinds", "lib/assets/home.png", true, "cover.blinds"],
   ];
+
+  bool _loungeLampOn = false;
 
   final ScrollController _scrollController = ScrollController();
   bool _isLoadingMore = false;
@@ -168,5 +182,6 @@ class _HomePageState extends State<HomePage> {
     setState(() {
       _MySmartDevices[index][2] = value;
     });
+    _api.toggleLight(_MySmartDevices[index][3], value);
   }
 }
