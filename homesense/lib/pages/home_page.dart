@@ -14,13 +14,55 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   List _MySmartDevices = [
-    ["Living Room", "assets/living_room.png", true],
-    ["Bed Room", "assets/bed_room.png", true],
-    ["Shed", "assets/kitchen.png", true],
-    ["Lounge", "assets/bathroom.png", true],
-    ["Garage", "assets/garage.png", true],
-    ["Blinds", "assets/garden.png", true],
+    ["Living Room", "lib/assets/floor_lamp.png", true],
+    ["Bed Room", "lib/assets/home.png", true],
+    ["Shed", "lib/assets/home.png", true],
+    ["Lounge", "lib/assets/home.png", true],
+    ["Garage", "lib/assets/home.png", true],
+    ["Blinds", "lib/assets/home.png", true],
   ];
+
+  final ScrollController _scrollController = ScrollController();
+  bool _isLoadingMore = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_scrollListener);
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _scrollListener() {
+    if (_scrollController.position.pixels ==
+        _scrollController.position.maxScrollExtent) {
+      _loadMoreItems();
+    }
+  }
+
+  void _loadMoreItems() async {
+    if (_isLoadingMore) return;
+
+    setState(() {
+      _isLoadingMore = true;
+    });
+
+    // Simulate a delay for loading more items
+    await Future.delayed(Duration(seconds: 2));
+
+    setState(() {
+      _MySmartDevices.addAll([
+        // ["New Room 1", "assets/new_room.png", true],
+        // ["New Room 2", "assets/new_room.png", true],
+        // Add more items as needed
+      ]);
+      _isLoadingMore = false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,12 +81,12 @@ class _HomePageState extends State<HomePage> {
                   Icon(
                     Icons.menu,
                     size: 50,
-                    color: Color.fromARGB(129, 42, 42, 42),
+                    color: iconColor,
                   ),
                   Icon(
                     Icons.person,
                     size: 50,
-                    color: Colors.white38,
+                    color: iconColor,
                   )
                 ],
               ),
@@ -57,7 +99,7 @@ class _HomePageState extends State<HomePage> {
                 children: [
                   Text("Welcome Home"),
                   Text(
-                    "Some info",
+                    "Mossgiel House",
                     style: TextStyle(
                       color: Color.fromARGB(255, 255, 255, 255),
                       fontSize: 30,
@@ -74,26 +116,35 @@ class _HomePageState extends State<HomePage> {
             ),
             Expanded(
               child: GridView.builder(
+                controller: _scrollController,
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
                 ),
-                itemCount: _MySmartDevices
-                    .length, // Ensure itemCount matches the list length
+                itemCount: _MySmartDevices.length,
                 itemBuilder: (context, index) {
                   return DeviceBlock(
                     name: _MySmartDevices[index][0],
                     iconPath: _MySmartDevices[index][1],
                     powerOn: _MySmartDevices[index][2],
-                    onChanged: (value) {
-                      // Do something with the value
-                    },
+                    onChanged: (value) => powerToggleSwitched(value, index),
                   );
                 },
               ),
             ),
+            if (_isLoadingMore)
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Center(child: CircularProgressIndicator()),
+              ),
           ],
         ),
       ),
     );
+  }
+
+  powerToggleSwitched(bool value, int index) {
+    setState(() {
+      _MySmartDevices[index][2] = value;
+    });
   }
 }
