@@ -116,7 +116,7 @@ class _HomePageState extends State<HomePage> {
 
   List _mySmartDevices = [
     ["Living Room", "lib/assets/floor_lamp.png", true, "light.living_room"],
-    ["Bed Room", "lib/assets/home.png", true, "light.bedroom"],
+    ["Bed Room", "lib/assets/floor_lamp.png", true, "light.bedroom"],
     ["Shed", "lib/assets/home.png", true, "light.shed"],
     ["Lounge", "lib/assets/floor_lamp.png", true, "switch.lounge"],
     ["Garage", "lib/assets/home.png", true, "light.garage"],
