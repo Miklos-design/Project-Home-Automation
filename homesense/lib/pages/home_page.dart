@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:homesense/pages/automations.dart';
+import 'package:homesense/pages/devices.dart';
 import 'package:homesense/services/hass.dart';
 import 'package:homesense/utils/device_block.dart';
 import '../utils/colors.dart';
-import 'automations.dart';
 
 // Top Bar Widget
 class HeaderWidget extends StatelessWidget {
@@ -116,7 +116,7 @@ class _HomePageState extends State<HomePage> {
 
   List _mySmartDevices = [
     ["Living Room", "lib/assets/floor_lamp.png", true, "light.living_room"],
-    ["Bed Room", "lib/assets/home.png", true, "switch.my_room_switch_1"],
+    ["Bed Room", "lib/assets/home.png", true, "light.bedroom"],
     ["Shed", "lib/assets/home.png", true, "light.shed"],
     ["Lounge", "lib/assets/floor_lamp.png", true, "switch.lounge"],
     ["Garage", "lib/assets/home.png", true, "light.garage"],
@@ -173,13 +173,24 @@ class _HomePageState extends State<HomePage> {
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
-      if (index == 2) {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => Automations()),
-        );
-      }
     });
+    if (index == 0) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => HomePage()),
+      );
+    }
+    if (index == 2) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => Automations()),
+      );
+    } else if (index == 1) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => Devices()),
+      );
+    }
   }
 
   @override

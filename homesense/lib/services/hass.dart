@@ -25,5 +25,44 @@ class Hass {
     }
   }
 
-  // Additional methods for other interactions with Home Assistant
+  Future<List> getAutomations() async {
+    final response = await http.get(
+      Uri.parse('$baseUrl/api/states'),
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      List entities = jsonDecode(response.body);
+      return entities
+          .where((e) => e['entity_id'].startsWith('automation.'))
+          .toList();
+    } else {
+      throw Exception('Failed to load automations');
+    }
+  }
+
+  Future<void> turnOnAutomation(String entityId) async {
+    await http.post(
+      Uri.parse('$baseUrl/api/services/automation/turn_on'),
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode({'entity_id': entityId}),
+    );
+  }
+
+  Future<void> turnOffAutomation(String entityId) async {
+    await http.post(
+      Uri.parse('$baseUrl/api/services/automation/turn_off'),
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode({'entity_id': entityId}),
+    );
+  }
 }
