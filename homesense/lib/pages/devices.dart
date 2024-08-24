@@ -20,10 +20,10 @@ class _DevicesState extends State<Devices> {
 
   List _mySmartDevices = [
     ["Living Room", "lib/assets/floor_lamp.png", true, "light.living_room"],
-    ["Bed Room", "lib/assets/floor_lamp.png", true, "light.bedroom"],
+    ["Bed Room", "lib/assets/king_bed.png", true, "light.bedroom"],
     ["Shed", "lib/assets/home.png", true, "light.shed"],
     ["Lounge", "lib/assets/floor_lamp.png", true, "switch.lounge"],
-    ["Garage", "lib/assets/home.png", true, "light.garage"],
+    ["Garage", "lib/assets/add.png", true, "light.garage"],
     ["Blinds", "lib/assets/home.png", true, "cover.blinds"],
   ];
 

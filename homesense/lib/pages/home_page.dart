@@ -88,7 +88,7 @@ class _HomePageState extends State<HomePage> {
     ["Bed Room", "lib/assets/floor_lamp.png", true, "light.bedroom"],
     ["Shed", "lib/assets/home.png", true, "light.shed"],
     ["Lounge", "lib/assets/floor_lamp.png", true, "switch.lounge"],
-    ["Garage", "lib/assets/home.png", true, "light.garage"],
+    ["Garage", "lib/assets/floor_lamp.png", true, "light.garage"],
     ["Blinds", "lib/assets/home.png", true, "cover.blinds"],
   ];
 
