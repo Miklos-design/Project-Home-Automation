@@ -1,20 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:homesense/services/hass.dart';
+import '../utils/api_config.dart';
+import 'package:homesense/pages/extra/bottom_navigation.dart'; // Import the BottomNavBar class
 
 class Automations extends StatefulWidget {
   @override
-  _AutomationPageState createState() => _AutomationPageState();
+  _AutomationsState createState() => _AutomationsState();
 }
 
-class _AutomationPageState extends State<Automations> {
+class _AutomationsState extends State<Automations> {
   final Hass _api = Hass(
     baseUrl: 'http://192.168.0.68:8123',
-    token:
-        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiI3ZDVjMmQ5MjJlZjg0YzhiYmE5NmM2Mzk5NTNkNjk2NyIsImlhdCI6MTcyMjg1OTY4MCwiZXhwIjoyMDM4MjE5NjgwfQ.JMW0uIi2Zwzn0CWRheznp91MQDKHcFTDr9-f68f3qQE',
+    token: APIConfig.apiKey,
   );
 
   List _automations = [];
   bool _isLoading = true;
+  int _selectedIndex = 2; // Set to 2 since this is the Automations page
 
   @override
   void initState() {
@@ -24,6 +26,7 @@ class _AutomationPageState extends State<Automations> {
 
   void _fetchAutomations() async {
     List automations = await _api.getAutomations();
+    print(automations); // Print the entire list to see its structure
     setState(() {
       _automations = automations;
       _isLoading = false;
@@ -39,6 +42,12 @@ class _AutomationPageState extends State<Automations> {
     _fetchAutomations(); // Refresh the list to get the updated state
   }
 
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -51,9 +60,10 @@ class _AutomationPageState extends State<Automations> {
               itemCount: _automations.length,
               itemBuilder: (context, index) {
                 var automation = _automations[index];
-                // Check if the name key exists and is not null
-                var automationName =
-                    automation['alias'] ?? 'Unnamed Automation';
+                var automationName = automation['attributes']
+                        ['friendly_name'] ??
+                    'Unnamed Automation';
+
                 var automationState = automation['state'] ?? 'off';
 
                 return ListTile(
@@ -67,6 +77,10 @@ class _AutomationPageState extends State<Automations> {
                 );
               },
             ),
+      bottomNavigationBar: BottomNavigation(
+        selectedIndex: _selectedIndex,
+        onItemTapped: _onItemTapped,
+      ),
     );
   }
 }

@@ -5,6 +5,7 @@ import 'package:homesense/pages/devices.dart';
 import 'package:homesense/services/hass.dart';
 import 'package:homesense/utils/device_block.dart';
 import '../utils/colors.dart';
+import 'package:homesense/pages/extra/bottom_navigation.dart'; // Import the BottomNavBar class
 
 // Top Bar Widget
 class HeaderWidget extends StatelessWidget {
@@ -63,38 +64,6 @@ class SmartDevicesGrid extends StatelessWidget {
           );
         },
       ),
-    );
-  }
-}
-
-// Bottom Navigation Widget
-class BottomNavBar extends StatelessWidget {
-  final int selectedIndex;
-  final Function(int) onItemTapped;
-
-  BottomNavBar({required this.selectedIndex, required this.onItemTapped});
-
-  @override
-  Widget build(BuildContext context) {
-    return BottomNavigationBar(
-      currentIndex: selectedIndex,
-      onTap: onItemTapped,
-      items: const [
-        BottomNavigationBarItem(
-          icon: Icon(Icons.home),
-          label: 'Home',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.devices),
-          label: 'Devices',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.settings_remote),
-          label: 'Automation',
-        ),
-      ],
-      selectedItemColor: Colors.blue,
-      unselectedItemColor: Colors.grey,
     );
   }
 }
@@ -179,16 +148,15 @@ class _HomePageState extends State<HomePage> {
         context,
         MaterialPageRoute(builder: (context) => HomePage()),
       );
-    }
-    if (index == 2) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => Automations()),
-      );
     } else if (index == 1) {
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => Devices()),
+      );
+    } else if (index == 2) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => Automations()),
       );
     }
   }
@@ -235,7 +203,7 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
       ),
-      bottomNavigationBar: BottomNavBar(
+      bottomNavigationBar: BottomNavigation(
         selectedIndex: _selectedIndex,
         onItemTapped: _onItemTapped,
       ),
