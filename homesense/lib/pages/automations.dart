@@ -26,6 +26,7 @@ class _AutomationsState extends State<Automations> {
 
   void _fetchAutomations() async {
     List automations = await _api.getAutomations();
+    print(automations); // Print the entire list to see its structure
     setState(() {
       _automations = automations;
       _isLoading = false;
@@ -59,8 +60,10 @@ class _AutomationsState extends State<Automations> {
               itemCount: _automations.length,
               itemBuilder: (context, index) {
                 var automation = _automations[index];
-                var automationName =
-                    automation['alias'] ?? 'Unnamed Automation';
+                var automationName = automation['attributes']
+                        ['friendly_name'] ??
+                    'Unnamed Automation';
+
                 var automationState = automation['state'] ?? 'off';
 
                 return ListTile(
