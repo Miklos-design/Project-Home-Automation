@@ -3,12 +3,15 @@ PODS:
   - path_provider_foundation (0.0.1):
     - Flutter
     - FlutterMacOS
+  - proximity_sensor (0.0.1):
+    - Flutter
   - rive_common (0.0.1):
     - Flutter
 
 DEPENDENCIES:
   - Flutter (from `Flutter`)
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
+  - proximity_sensor (from `.symlinks/plugins/proximity_sensor/ios`)
   - rive_common (from `.symlinks/plugins/rive_common/ios`)
 
 EXTERNAL SOURCES:
@@ -16,12 +19,15 @@ EXTERNAL SOURCES:
     :path: Flutter
   path_provider_foundation:
     :path: ".symlinks/plugins/path_provider_foundation/darwin"
+  proximity_sensor:
+    :path: ".symlinks/plugins/proximity_sensor/ios"
   rive_common:
     :path: ".symlinks/plugins/rive_common/ios"
 
 SPEC CHECKSUMS:
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
   path_provider_foundation: 2b6b4c569c0fb62ec74538f866245ac84301af46
+  proximity_sensor: 87bc974f9d94b03b4b5911ff1f93a61e561e6183
   rive_common: cbbac3192af00d7341f19dae2f26298e9e37d99e
 
 PODFILE CHECKSUM: 819463e6a0290f5a72f145ba7cde16e8b6ef0796

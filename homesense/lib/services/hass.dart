@@ -25,6 +25,23 @@ class Hass {
     }
   }
 
+  Future<void> toggleSwitch(String entityId, bool turnOn) async {
+    final url =
+        Uri.parse('$baseUrl/api/services/switch/turn_${turnOn ? 'on' : 'off'}');
+    final headers = {
+      'Authorization': 'Bearer $token',
+      'Content-Type': 'application/json',
+    };
+    final body = jsonEncode({'entity_id': entityId});
+
+    final response = await http.post(url, headers: headers, body: body);
+    if (response.statusCode == 200) {
+      print('Switch toggled successfully');
+    } else {
+      print('Failed to toggle switch: ${response.body}');
+    }
+  }
+
   Future<List> getAutomations() async {
     final response = await http.get(
       Uri.parse('$baseUrl/api/states'),
@@ -64,8 +81,38 @@ class Hass {
     if (response.statusCode == 200) {
       return jsonDecode(response.body);
     } else {
+      print('Failed to load entity. Status code: ${response.statusCode}');
+      print('Response body: ${response.body}');
       throw Exception('Failed to load entity');
     }
+  }
+
+  void setBrightness(String entityId, double brightness) async {
+    await http.post(
+      Uri.parse('$baseUrl/api/services/light/turn_on'),
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+      },
+      body: json.encode({
+        'entity_id': entityId,
+        'brightness_pct': (brightness * 100).toInt(),
+      }),
+    );
+  }
+
+  void setColorTemperature(String entityId, int kelvin) async {
+    await http.post(
+      Uri.parse('$baseUrl/api/services/light/turn_on'),
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+      },
+      body: json.encode({
+        'entity_id': entityId,
+        'kelvin': kelvin,
+      }),
+    );
   }
 
   Future<void> turnOffAutomation(String entityId) async {
