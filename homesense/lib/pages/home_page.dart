@@ -3,7 +3,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:homesense/pages/automations.dart';
 import 'package:homesense/pages/devices.dart';
 import 'package:homesense/services/hass.dart';
-import 'package:homesense/utils/device_block.dart';
 import 'package:homesense/utils/colors.dart';
 import 'package:homesense/pages/extra/bottom_navigation.dart';
 import 'package:rive/rive.dart';
@@ -11,26 +10,22 @@ import '../utils/api_config.dart';
 
 // Top Bar Widget
 class HeaderWidget extends StatelessWidget {
+  @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 40.0, vertical: 10.0),
+      padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Icon(Icons.movie, size: 50, color: iconColor),
-          Expanded(
-            child: Center(
-              child: Text(
-                "HomeSense",
-                style: GoogleFonts.oswald(
-                  fontSize: 29,
-                  fontWeight: FontWeight.w400,
-                  color: mainTextColor,
-                ),
-              ),
+          Text(
+            "HomeSense",
+            style: GoogleFonts.oswald(
+              fontSize: 29,
+              fontWeight: FontWeight.w400,
+              color: mainTextColor,
             ),
           ),
-          Icon(Icons.person, size: 50, color: iconColor)
+          Icon(Icons.person, size: 50, color: iconColor),
         ],
       ),
     );
@@ -94,8 +89,8 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _getBackgroundAnimation() {
-    return FutureBuilder<RiveAnimation>(
-      future: _loadRiveAnimation(), // Asynchronously load Rive animation
+    return FutureBuilder<String>(
+      future: _loadRiveAnimationUrl(), // Asynchronously load Rive animation URL
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Center(
@@ -104,35 +99,27 @@ class _HomePageState extends State<HomePage> {
           return Center(
               child: Text('Error loading animation')); // Error handling
         } else {
-          return snapshot.data!;
+          return SizedBox.expand(
+            child: RiveAnimation.network(
+              snapshot.data!, // Use the URL directly
+              fit: BoxFit.cover,
+            ),
+          );
         }
       },
     );
   }
 
-  Future<RiveAnimation> _loadRiveAnimation() async {
-    try {
-      switch (_weatherCondition) {
-        case 'rainy':
-          return RiveAnimation.network(
-            'https://public.rive.app/community/runtime-files/4454-9096-parallax-canopy-house.riv',
-          );
-        case 'cloudy':
-          return RiveAnimation.network(
-            'https://public.rive.app/community/runtime-files/10034-19138-sky-sun-cloud.riv',
-          );
-        case 'sunny':
-          return RiveAnimation.network(
-            'https://rive.app/community/files/25-35-first-sun.riv',
-          );
-        default:
-          return RiveAnimation.network(
-            'https://public.rive.app/community/runtime-files/4454-9096-parallax-canopy-house.riv',
-          );
-      }
-    } catch (e) {
-      print('Error loading Rive animation: $e');
-      rethrow; // Re-throw the error to handle it in FutureBuilder
+  Future<String> _loadRiveAnimationUrl() async {
+    switch (_weatherCondition) {
+      case 'rainy':
+        return 'https://public.rive.app/community/runtime-files/10045-19164-sky-rain.riv';
+      case 'cloudy':
+        return 'https://public.rive.app/community/runtime-files/10034-19138-sky-sun-cloud.riv';
+      case 'sunny':
+        return 'https://public.rive.app/community/runtime-files/10040-19151-sky-moon-night.riv';
+      default:
+        return 'https://public.rive.app/community/runtime-files/4454-9096-parallax-canopy-house.riv';
     }
   }
 
@@ -143,6 +130,8 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         backgroundColor: backgroundColor,
         elevation: 0,
+        title: HeaderWidget(),
+        centerTitle: true,
       ),
       body: Stack(
         children: [
@@ -151,8 +140,7 @@ class _HomePageState extends State<HomePage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                HeaderWidget(),
-                const SizedBox(height: 10),
+                const SizedBox(height: 20),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 40.0),
                   child: Text(
