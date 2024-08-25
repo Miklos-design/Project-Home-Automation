@@ -12,22 +12,25 @@ import '../utils/api_config.dart';
 class HeaderWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            "HomeSense",
-            style: GoogleFonts.oswald(
-              fontSize: 29,
-              fontWeight: FontWeight.w400,
-              color: mainTextColor,
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Icon(Icons.person, size: 50, color: iconColor),
+        Expanded(
+          child: Center(
+            child: Text(
+              "HomeSense",
+              style: GoogleFonts.oswald(
+                fontSize: 29,
+                fontWeight: FontWeight.w400,
+                color: mainTextColor,
+              ),
             ),
           ),
-          Icon(Icons.person, size: 50, color: iconColor),
-        ],
-      ),
+        ),
+        SizedBox(
+            width: 50), // This matches the icon size to keep things aligned
+      ],
     );
   }
 }
@@ -141,14 +144,16 @@ class _HomePageState extends State<HomePage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const SizedBox(height: 20),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 40.0),
-                  child: Text(
-                    "Mossgiel House",
-                    style: GoogleFonts.bebasNeue(
-                      fontSize: 50,
-                      color: customTextColor,
-                      fontWeight: FontWeight.bold,
+                Center(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 40.0),
+                    child: Text(
+                      "Mossgiel House",
+                      style: GoogleFonts.bebasNeue(
+                        fontSize: 50,
+                        color: customTextColor,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ),
