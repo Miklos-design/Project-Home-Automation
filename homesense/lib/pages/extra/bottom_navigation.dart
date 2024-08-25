@@ -44,23 +44,28 @@ class _BottomNavigationState extends State<BottomNavigation> {
 
   @override
   Widget build(BuildContext context) {
-    return BottomNavigationBar(
-      items: const <BottomNavigationBarItem>[
-        BottomNavigationBarItem(
-          icon: Icon(Icons.home),
-          label: 'Home',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.devices),
-          label: 'Devices',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.settings),
-          label: 'Automations',
-        ),
-      ],
-      currentIndex: widget.selectedIndex,
-      onTap: _onItemTapped,
+    return Container(
+      color: Colors.transparent, // Set to transparent
+      child: BottomNavigationBar(
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.devices),
+            label: 'Devices',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.settings),
+            label: 'Automations',
+          ),
+        ],
+        currentIndex: widget.selectedIndex,
+        onTap: _onItemTapped,
+        backgroundColor: Colors.transparent, // Remove the background color
+        elevation: 0, // Remove elevation
+      ),
     );
   }
 }

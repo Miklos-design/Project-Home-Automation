@@ -5,7 +5,7 @@ import 'package:homesense/utils/api_config.dart';
 import 'package:homesense/utils/device_block.dart';
 import '../utils/colors.dart';
 import 'package:homesense/pages/extra/bottom_navigation.dart';
-import 'package:homesense/pages/home_page.dart';
+import 'package:homesense/utils/smart_devices_grid.dart';
 
 class Devices extends StatefulWidget {
   @override
@@ -20,14 +20,14 @@ class _DevicesState extends State<Devices> {
 
   List _mySmartDevices = [
     ["Living Room", "lib/assets/floor_lamp.png", true, "light.living_room"],
-    ["Bed Room", "lib/assets/floor_lamp.png", true, "light.bedroom"],
+    ["Bed Room", "lib/assets/king_bed.png", true, "light.bedroom"],
     ["Shed", "lib/assets/home.png", true, "light.shed"],
     ["Lounge", "lib/assets/floor_lamp.png", true, "switch.lounge"],
-    ["Garage", "lib/assets/home.png", true, "light.garage"],
+    ["Garage", "lib/assets/add.png", true, "light.garage"],
     ["Blinds", "lib/assets/home.png", true, "cover.blinds"],
   ];
 
-  int _selectedIndex = 1; // Set to 1 since this is the Devices page
+  int _selectedIndex = 1;
 
   void powerToggleSwitched(bool value, int index) {
     setState(() {
