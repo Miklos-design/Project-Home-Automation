@@ -4,22 +4,20 @@ import 'package:homesense/pages/automations.dart';
 import 'package:homesense/pages/devices.dart';
 import 'package:homesense/services/hass.dart';
 import 'package:homesense/utils/device_block.dart';
-import '../utils/colors.dart';
-import 'package:homesense/pages/extra/bottom_navigation.dart'; // Import the BottomNavBar class
+import 'package:homesense/utils/colors.dart';
+import 'package:homesense/pages/extra/bottom_navigation.dart';
+import 'package:rive/rive.dart';
+import '../utils/api_config.dart';
 
 // Top Bar Widget
 class HeaderWidget extends StatelessWidget {
-  @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 40.0, vertical: 10.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Icon(Icons.menu,
-              size: 50,
-              color:
-                  iconColor), // You can remove this line if you don't need the menu
+          Icon(Icons.movie, size: 50, color: iconColor),
           Expanded(
             child: Center(
               child: Text(
@@ -39,36 +37,7 @@ class HeaderWidget extends StatelessWidget {
   }
 }
 
-// Smart Devices Grid Widget
-class SmartDevicesGrid extends StatelessWidget {
-  final List devices;
-  final Function(bool, int) onToggle;
-
-  SmartDevicesGrid({required this.devices, required this.onToggle});
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: MediaQuery.of(context).size.height * 0.6,
-      child: GridView.builder(
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-        ),
-        itemCount: devices.length,
-        itemBuilder: (context, index) {
-          return DeviceBlock(
-            name: devices[index][0],
-            iconPath: devices[index][1],
-            powerOn: devices[index][2],
-            onChanged: (value) => onToggle(value, index),
-          );
-        },
-      ),
-    );
-  }
-}
-
-// Main Home Page Widget
+// Combined Home and Weather Page Widget
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
 
@@ -79,64 +48,27 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final Hass _api = Hass(
     baseUrl: 'http://192.168.0.68:8123',
-    token:
-        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiI3ZDVjMmQ5MjJlZjg0YzhiYmE5NmM2Mzk5NTNkNjk2NyIsImlhdCI6MTcyMjg1OTY4MCwiZXhwIjoyMDM4MjE5NjgwfQ.JMW0uIi2Zwzn0CWRheznp91MQDKHcFTDr9-f68f3qQE',
+    token: APIConfig.apiKey,
   );
 
-  List _mySmartDevices = [
-    ["Living Room", "lib/assets/floor_lamp.png", true, "light.living_room"],
-    ["Bed Room", "lib/assets/floor_lamp.png", true, "light.bedroom"],
-    ["Shed", "lib/assets/home.png", true, "light.shed"],
-    ["Lounge", "lib/assets/floor_lamp.png", true, "switch.lounge"],
-    ["Garage", "lib/assets/floor_lamp.png", true, "light.garage"],
-    ["Blinds", "lib/assets/home.png", true, "cover.blinds"],
-  ];
-
   int _selectedIndex = 0;
-  bool _isLoadingMore = false;
-  final ScrollController _scrollController = ScrollController();
+  String _weatherCondition = 'clear';
+  double _temperature = 0.0;
+  bool _isLoading = true;
 
   @override
   void initState() {
     super.initState();
-    _scrollController.addListener(_scrollListener);
+    _fetchWeather();
   }
 
-  @override
-  void dispose() {
-    _scrollController.dispose();
-    super.dispose();
-  }
-
-  void _scrollListener() {
-    if (_scrollController.position.pixels ==
-        _scrollController.position.maxScrollExtent) {
-      _loadMoreItems();
-    }
-  }
-
-  void _loadMoreItems() async {
-    if (_isLoadingMore) return;
-
+  void _fetchWeather() async {
+    var weather = await _api.getEntity('weather.forecast_home');
     setState(() {
-      _isLoadingMore = true;
+      _temperature = weather['attributes']['temperature'];
+      _weatherCondition = weather['state']; // 'clear', 'cloudy', 'rainy', etc.
+      _isLoading = false;
     });
-
-    await Future.delayed(Duration(seconds: 1));
-
-    setState(() {
-      _mySmartDevices.addAll([
-        // Add more items as needed
-      ]);
-      _isLoadingMore = false;
-    });
-  }
-
-  void powerToggleSwitched(bool value, int index) {
-    setState(() {
-      _mySmartDevices[index][2] = value;
-    });
-    _api.toggleLight(_mySmartDevices[index][3], value);
   }
 
   void _onItemTapped(int index) {
@@ -161,6 +93,49 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  Widget _getBackgroundAnimation() {
+    return FutureBuilder<RiveAnimation>(
+      future: _loadRiveAnimation(), // Asynchronously load Rive animation
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(
+              child: CircularProgressIndicator()); // Loading indicator
+        } else if (snapshot.hasError) {
+          return Center(
+              child: Text('Error loading animation')); // Error handling
+        } else {
+          return snapshot.data!;
+        }
+      },
+    );
+  }
+
+  Future<RiveAnimation> _loadRiveAnimation() async {
+    try {
+      switch (_weatherCondition) {
+        case 'rainy':
+          return RiveAnimation.network(
+            'https://public.rive.app/community/runtime-files/4454-9096-parallax-canopy-house.riv',
+          );
+        case 'cloudy':
+          return RiveAnimation.network(
+            'https://public.rive.app/community/runtime-files/10034-19138-sky-sun-cloud.riv',
+          );
+        case 'sunny':
+          return RiveAnimation.network(
+            'https://rive.app/community/files/25-35-first-sun.riv',
+          );
+        default:
+          return RiveAnimation.network(
+            'https://public.rive.app/community/runtime-files/4454-9096-parallax-canopy-house.riv',
+          );
+      }
+    } catch (e) {
+      print('Error loading Rive animation: $e');
+      rethrow; // Re-throw the error to handle it in FutureBuilder
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -169,39 +144,55 @@ class _HomePageState extends State<HomePage> {
         backgroundColor: backgroundColor,
         elevation: 0,
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            HeaderWidget(),
-            const SizedBox(height: 10),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 40.0),
-              child: Text(
-                "Mossgiel House",
-                style: GoogleFonts.bebasNeue(
-                  fontSize: 50,
-                  color: customTextColor,
-                  fontWeight: FontWeight.bold,
+      body: Stack(
+        children: [
+          _getBackgroundAnimation(),
+          SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                HeaderWidget(),
+                const SizedBox(height: 10),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 40.0),
+                  child: Text(
+                    "Mossgiel House",
+                    style: GoogleFonts.bebasNeue(
+                      fontSize: 50,
+                      color: customTextColor,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ),
-              ),
+                const SizedBox(height: 10),
+                Center(
+                  child: _isLoading
+                      ? CircularProgressIndicator()
+                      : Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              '${_temperature.toStringAsFixed(1)}°C',
+                              style: TextStyle(
+                                fontSize: 72,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                            ),
+                            Text(
+                              _weatherCondition.toUpperCase(),
+                              style: TextStyle(
+                                fontSize: 36,
+                                color: Colors.white70,
+                              ),
+                            ),
+                          ],
+                        ),
+                ),
+              ],
             ),
-            const SizedBox(height: 10),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 40.0),
-              child: Text("Smart Devices"),
-            ),
-            SmartDevicesGrid(
-              devices: _mySmartDevices,
-              onToggle: powerToggleSwitched,
-            ),
-            if (_isLoadingMore)
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Center(child: CircularProgressIndicator()),
-              ),
-          ],
-        ),
+          ),
+        ],
       ),
       bottomNavigationBar: BottomNavigation(
         selectedIndex: _selectedIndex,

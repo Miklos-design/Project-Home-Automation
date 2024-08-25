@@ -55,6 +55,19 @@ class Hass {
     );
   }
 
+  Future<Map<String, dynamic>> getEntity(String entityId) async {
+    final response = await http.get(
+      Uri.parse('$baseUrl/api/states/$entityId'),
+      headers: {'Authorization': 'Bearer $token'},
+    );
+
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    } else {
+      throw Exception('Failed to load entity');
+    }
+  }
+
   Future<void> turnOffAutomation(String entityId) async {
     await http.post(
       Uri.parse('$baseUrl/api/services/automation/turn_off'),

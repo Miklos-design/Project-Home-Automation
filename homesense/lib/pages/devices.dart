@@ -5,7 +5,7 @@ import 'package:homesense/utils/api_config.dart';
 import 'package:homesense/utils/device_block.dart';
 import '../utils/colors.dart';
 import 'package:homesense/pages/extra/bottom_navigation.dart';
-import 'package:homesense/pages/home_page.dart';
+import 'package:homesense/utils/smart_devices_grid.dart';
 
 class Devices extends StatefulWidget {
   @override
@@ -27,7 +27,7 @@ class _DevicesState extends State<Devices> {
     ["Blinds", "lib/assets/home.png", true, "cover.blinds"],
   ];
 
-  int _selectedIndex = 1; // Set to 1 since this is the Devices page
+  int _selectedIndex = 1;
 
   void powerToggleSwitched(bool value, int index) {
     setState(() {
