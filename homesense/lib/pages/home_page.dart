@@ -121,8 +121,10 @@ class _HomePageState extends State<HomePage> {
         return 'https://public.rive.app/community/runtime-files/10034-19138-sky-sun-cloud.riv';
       case 'sunny':
         return 'https://public.rive.app/community/runtime-files/10040-19151-sky-moon-night.riv';
+      case 'partlycloudy':
+        return 'https://public.rive.app/community/runtime-files/10034-19138-sky-sun-cloud.riv';
       default:
-        return 'https://public.rive.app/community/runtime-files/4454-9096-parallax-canopy-house.riv';
+        return 'https://public.rive.app/community/runtime-files/10034-19138-sky-sun-cloud.riv';
     }
   }
 

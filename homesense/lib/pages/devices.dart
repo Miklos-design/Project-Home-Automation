@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:homesense/services/hass.dart';
 import 'package:homesense/utils/api_config.dart';
-import 'package:homesense/utils/device_block.dart';
+import 'package:proximity_sensor/proximity_sensor.dart';
 import '../utils/colors.dart';
 import 'package:homesense/pages/extra/bottom_navigation.dart';
 import 'package:homesense/utils/smart_devices_grid.dart';
@@ -52,6 +52,19 @@ class _DevicesState extends State<Devices> {
     setState(() {
       _mySmartDevices = updatedDevices;
       _isLoading = false;
+    });
+  }
+
+  double _currentBrightness = 0.0;
+
+  void hallwayState() {
+    super.initState();
+    ProximitySensor.events.listen((int event) {
+      // Proximity returns 0 when near and 1 when far
+      setState(() {
+        _currentBrightness = event == 0 ? 100.0 : 10.0;
+      });
+      _api.setBrightness(_mySmartDevices[0][3], _currentBrightness);
     });
   }
 
