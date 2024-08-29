@@ -8,9 +8,9 @@ class AutomationService {
 
   Future<void> triggerTV(BuildContext context) async {
     try {
-      await _api.runAutomation("1724956457128");
+      await _api.runAutomation("automation.tv_time");
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('TV automation triggered!')),
+        SnackBar(content: Text('TV Time automation triggered!')),
       );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(

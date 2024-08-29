@@ -134,7 +134,7 @@ class Hass {
         'Authorization': 'Bearer $token',
         'Content-Type': 'application/json',
       },
-      body: jsonEncode({'id': entityId}),
+      body: jsonEncode({'entity_id': entityId}),
     );
   }
 }

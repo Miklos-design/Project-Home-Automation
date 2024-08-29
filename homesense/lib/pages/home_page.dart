@@ -190,6 +190,13 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          AutomationService(_api).triggerTV(context);
+        },
+        child: Icon(Icons.tv), // TV symbol
+        backgroundColor: Colors.blue,
+      ),
       bottomNavigationBar: BottomNavigation(
         selectedIndex: _selectedIndex,
         onItemTapped: _onItemTapped,
