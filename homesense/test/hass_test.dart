@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:homesense/pages/home_page.dart'; // Assuming the path
 import 'package:mockito/mockito.dart';
 import 'package:homesense/services/hass.dart';
+import 'package:homesense/utils/api_config.dart';
 
 class MockHass extends Mock implements Hass {}
 
@@ -19,7 +20,7 @@ void main() {
 
     // Build the HomePage with mocked Hass instance.
     await tester.pumpWidget(MaterialApp(
-      home: HomePage(api: mockHass), // Passing the mock service
+      home: HomePage(_api: mockHass), // Passing the mock service
     ));
 
     // Verify that CircularProgressIndicator is shown initially.

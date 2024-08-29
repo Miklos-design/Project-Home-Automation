@@ -7,6 +7,7 @@ import 'package:homesense/utils/colors.dart';
 import 'package:homesense/pages/extra/bottom_navigation.dart';
 import 'package:rive/rive.dart';
 import '../utils/api_config.dart';
+import 'package:homesense/services/automation_service.dart';
 
 // Top Bar Widget
 class HeaderWidget extends StatelessWidget {

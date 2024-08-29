@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "320780407455",
+    "project_id": "home-assitant-4959c",
+    "storage_bucket": "home-assitant-4959c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:320780407455:android:742bfd7921be2eda7c88aa",
+        "android_client_info": {
+          "package_name": "com.example.homesense"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCHDQLNgtdeUdSX3w-AUapX_ke9iLM8IrA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

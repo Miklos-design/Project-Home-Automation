@@ -125,4 +125,16 @@ class Hass {
       body: jsonEncode({'entity_id': entityId}),
     );
   }
+
+  // Function to run an automation
+  Future<void> runAutomation(String entityId) async {
+    await http.post(
+      Uri.parse('$baseUrl/api/services/automation/trigger'),
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode({'id': entityId}),
+    );
+  }
 }

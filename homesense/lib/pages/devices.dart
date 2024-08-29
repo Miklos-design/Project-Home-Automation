@@ -49,10 +49,12 @@ class _DevicesState extends State<Devices> {
       ]);
     }
 
-    setState(() {
-      _mySmartDevices = updatedDevices;
-      _isLoading = false;
-    });
+    if (mounted) {
+      setState(() {
+        _mySmartDevices = updatedDevices;
+        _isLoading = false;
+      });
+    }
   }
 
   double _currentBrightness = 0.0;
