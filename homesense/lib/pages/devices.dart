@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:homesense/services/hass.dart';
 import 'package:homesense/utils/api_config.dart';
-import 'package:homesense/utils/device_block.dart';
+import 'package:proximity_sensor/proximity_sensor.dart';
 import '../utils/colors.dart';
 import 'package:homesense/pages/extra/bottom_navigation.dart';
 import 'package:homesense/utils/smart_devices_grid.dart';
@@ -19,15 +19,56 @@ class _DevicesState extends State<Devices> {
   );
 
   List _mySmartDevices = [
-    ["Living Room", "lib/assets/floor_lamp.png", true, "light.living_room"],
+    ["Hallway", "lib/assets/bulb.png", true, "light.living_room"],
     ["Bed Room", "lib/assets/king_bed.png", true, "light.bedroom"],
-    ["Shed", "lib/assets/home.png", true, "light.shed"],
-    ["Lounge", "lib/assets/floor_lamp.png", true, "switch.lounge"],
-    ["Garage", "lib/assets/add.png", true, "light.garage"],
-    ["Blinds", "lib/assets/home.png", true, "cover.blinds"],
+    ["Lounge", "lib/assets/floor_lamp.png", true, "light.lounge_lamp"],
+    ["Toaster", "lib/assets/toaster.png", true, "switch.toster"],
+    ["Kettle", "lib/assets/kettle.png", true, "switch.kettle"],
+    ["Blinds", "lib/assets/roller.png", true, "cover.blinds"],
   ];
 
   int _selectedIndex = 1;
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchDeviceStatuses(); // Fetch the status of devices on initialization
+  }
+
+  void _fetchDeviceStatuses() async {
+    List updatedDevices = [];
+
+    for (var device in _mySmartDevices) {
+      var status = await _api.getEntity(device[3]);
+      updatedDevices.add([
+        device[0],
+        device[1],
+        status['state'] == 'on', // Update the state based on API response
+        device[3],
+      ]);
+    }
+
+    if (mounted) {
+      setState(() {
+        _mySmartDevices = updatedDevices;
+        _isLoading = false;
+      });
+    }
+  }
+
+  double _currentBrightness = 0.0;
+
+  void hallwayState() {
+    super.initState();
+    ProximitySensor.events.listen((int event) {
+      // Proximity returns 0 when near and 1 when far
+      setState(() {
+        _currentBrightness = event == 0 ? 100.0 : 10.0;
+      });
+      _api.setBrightness(_mySmartDevices[0][3], _currentBrightness);
+    });
+  }
 
   void powerToggleSwitched(bool value, int index) {
     setState(() {
@@ -50,30 +91,34 @@ class _DevicesState extends State<Devices> {
         backgroundColor: backgroundColor,
         elevation: 0,
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const SizedBox(height: 10),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 40.0),
-            child: Text(
-              "Smart Devices",
-              style: GoogleFonts.bebasNeue(
-                fontSize: 50,
-                color: customTextColor,
-                fontWeight: FontWeight.bold,
-              ),
+      body: _isLoading
+          ? Center(
+              child:
+                  CircularProgressIndicator()) // Show a loading indicator while fetching
+          : Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 10),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 40.0),
+                  child: Text(
+                    "Smart Devices",
+                    style: GoogleFonts.bebasNeue(
+                      fontSize: 50,
+                      color: customTextColor,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 10),
+                Expanded(
+                  child: SmartDevicesGrid(
+                    devices: _mySmartDevices,
+                    onToggle: powerToggleSwitched,
+                  ),
+                ),
+              ],
             ),
-          ),
-          const SizedBox(height: 10),
-          Expanded(
-            child: SmartDevicesGrid(
-              devices: _mySmartDevices,
-              onToggle: powerToggleSwitched,
-            ),
-          ),
-        ],
-      ),
       bottomNavigationBar: BottomNavigation(
         selectedIndex: _selectedIndex,
         onItemTapped: _onItemTapped,
