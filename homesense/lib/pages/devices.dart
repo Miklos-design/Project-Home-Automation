@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:homesense/services/hass.dart';
 import 'package:homesense/utils/api_config.dart';
-import 'package:proximity_sensor/proximity_sensor.dart';
-import '../utils/colors.dart';
+import 'package:homesense/utils/colors.dart';
+import 'package:homesense/pages/extra/hallway_page.dart';
 import 'package:homesense/pages/extra/bottom_navigation.dart';
 import 'package:homesense/utils/smart_devices_grid.dart';
 
@@ -57,24 +57,25 @@ class _DevicesState extends State<Devices> {
     }
   }
 
-  double _currentBrightness = 0.0;
-
-  void hallwayState() {
-    super.initState();
-    ProximitySensor.events.listen((int event) {
-      // Proximity returns 0 when near and 1 when far
-      setState(() {
-        _currentBrightness = event == 0 ? 100.0 : 10.0;
-      });
-      _api.setBrightness(_mySmartDevices[0][3], _currentBrightness);
-    });
-  }
-
   void powerToggleSwitched(bool value, int index) {
     setState(() {
       _mySmartDevices[index][2] = value;
     });
     _api.toggleLight(_mySmartDevices[index][3], value);
+  }
+
+  void _onDeviceTapped(int index) {
+    if (_mySmartDevices[index][0] == "Hallway") {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => HallwayPage(
+            api: _api,
+            entityId: _mySmartDevices[index][3],
+          ),
+        ),
+      );
+    }
   }
 
   void _onItemTapped(int index) {
@@ -92,9 +93,7 @@ class _DevicesState extends State<Devices> {
         elevation: 0,
       ),
       body: _isLoading
-          ? Center(
-              child:
-                  CircularProgressIndicator()) // Show a loading indicator while fetching
+          ? Center(child: CircularProgressIndicator())
           : Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -115,6 +114,7 @@ class _DevicesState extends State<Devices> {
                   child: SmartDevicesGrid(
                     devices: _mySmartDevices,
                     onToggle: powerToggleSwitched,
+                    onDeviceTapped: _onDeviceTapped, // Pass the callback
                   ),
                 ),
               ],
